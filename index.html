@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>APLIKAGRO — Motor Agro del Campesino</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container" id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div>
+                    <div class="logo">
+                        <div class="logo-icon">🌾</div>
+                        <span class="brand-text">APLIKAGRO</span>
+                    </div>
+                    <div class="subtitle">"La tecnología no decide por el campesino. Le permite decidir mejor."</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.8rem; color: var(--text-dim);" id="current-date"></div>
+                    <div style="font-size: 0.7rem; color: var(--agro-green);" id="moon-phase"></div>
+                </div>
+            </div>
+            
+            <!-- Selector de Perfil -->
+            <div class="profile-selector">
+                <button class="profile-btn active" data-profile="ramon" onclick="setProfile('ramon')">
+                    👨‍🌾 Ramón (Rústico)
+                </button>
+                <button class="profile-btn" data-profile="marta" onclick="setProfile('marta')">
+                    👩‍ Marta (Tech)
+                </button>
+                <button class="profile-btn" data-profile="futuro" onclick="setProfile('futuro')">
+                    🎓 Futuro Finquero
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <section id="dashboard" class="section active">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">📊 Mi Finca</h2>
+                
+                <div class="semaphore" id="main-semaphore">
+                    <div class="semaphore-light semaphore-green active">OPERATIVO</div>
+                    <div class="semaphore-light semaphore-yellow">ATENCIÓN</div>
+                    <div class="semaphore-light semaphore-red">CRÍTICO</div>
+                </div>
+
+                <div class="dashboard-grid" id="dashboard-grid">
+                    <!-- Generado dinámicamente -->
+                </div>
+
+                <div id="quick-actions">
+                    <button class="btn-primary" onclick="showModal('decision')">
+                        🤔 ¿Qué me conviene hacer hoy?
+                    </button>
+                    <button class="btn-secondary" onclick="navigateTo('mapa')">
+                        🗺️ Ver Mapa de la Finca
+                    </button>
+                </div>
+            </section>
+
+            <!-- Unidades -->
+            <section id="unidades" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">📏 Unidades del Campo</h2>
+                <p style="color: var(--text-dim); margin-bottom: 1.5rem;">Conversor de medidas tradicionales a internacionales</p>
+                
+                <div class="unit-converter">
+                    <div>
+                        <input type="number" id="unit-value" class="unit-input" value="30" placeholder="Valor">
+                        <div class="unit-label" id="unit-from-label">Varas</div>
+                    </div>
+                    <div style="font-size: 1.5rem; color: var(--orange);">→</div>
+                    <div>
+                        <div class="unit-input" id="unit-result" style="background: rgba(255,107,0,0.1); border-color: var(--orange);">25.2</div>
+                        <div class="unit-label">Metros</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
+                    <button class="btn-secondary" onclick="setUnit('vara')">Vara</button>
+                    <button class="btn-secondary" onclick="setUnit('cordel')">Cordel</button>
+                    <button class="btn-secondary" onclick="setUnit('caballeria')">Caballería</button>
+                    <button class="btn-secondary" onclick="setUnit('tarea')">Tarea</button>
+                    <button class="btn-secondary" onclick="setUnit('arroba')">Arroba</button>
+                    <button class="btn-secondary" onclick="setUnit('quintal')">Quintal</button>
+                </div>
+
+                <div class="conversion-result">
+                    <strong id="conversion-text">30 varas ≈ 25.2 metros</strong>
+                    <span style="font-size: 0.9rem; color: var(--text-dim);">Herramienta educativa: nunca pierdas la referencia tradicional</span>
+                </div>
+            </section>
+
+            <!-- Mapa -->
+            <section id="mapa" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🗺️ Mapa de la Finca</h2>
+                <div class="farm-map" id="farm-map">
+                    <!-- Zonas generadas dinámicamente -->
+                </div>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <span class="badge badge-measured">📍 GPS Listo</span>
+                    <span class="badge badge-estimated">📡 Satélite</span>
+                    <span class="badge badge-inferred">🚁 Dron</span>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim);">
+                    Preparado para integración con GPS de precisión, drones e imágenes satelitales.
+                </p>
+            </section>
+
+            <!-- Suelo -->
+            <section id="suelo" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🌱 Ficha de Suelo</h2>
+                <div id="soil-data"></div>
+            </section>
+
+            <!-- Agua -->
+            <section id="agua" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">💧 Gestión del Agua</h2>
+                <div id="water-data"></div>
+            </section>
+
+            <!-- Cultivos -->
+            <section id="cultivos" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🌾 Cultivos</h2>
+                <div id="crops-list"></div>
+            </section>
+
+            <!-- Animales -->
+            <section id="animales" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🐄 Lote Pecuario</h2>
+                <div id="livestock-list"></div>
+            </section>
+
+            <!-- LOOPHH -->
+            <section id="loophh" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🔄 LOOPHH - Interacciones</h2>
+                <p style="color: var(--text-dim); margin-bottom: 1rem;">
+                    La finca es un sistema vivo. Cada componente afecta a los demás.
+                </p>
+                <div class="loophh-container" id="loophh-list"></div>
+            </section>
+
+            <!-- Lector de Fotos -->
+            <section id="fotos" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">📷 Lector de Fotos</h2>
+                <div class="camera-interface" id="camera-area">
+                    <div class="camera-placeholder">📷</div>
+                    <p style="margin-bottom: 1rem;">Apunta a tu cultivo, animal o suelo</p>
+                    <div class="camera-btn" onclick="simulatePhotoAnalysis()">📸</div>
+                </div>
+                <div id="photo-analysis" style="display: none;">
+                    <div class="analysis-result">
+                        <h4 style="color: var(--tech-purple); margin-bottom: 0.5rem;">Análisis Preliminar</h4>
+                        <p id="analysis-text">Detectado: Posible deficiencia de nitrógeno</p>
+                        <div style="margin: 1rem 0;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                <span>Confianza</span>
+                                <span id="confidence-value">75%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidence-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="badge badge-inferred">🔍 Inferencia</span>
+                            <span class="badge badge-pending">⚠️ Verificar en campo</span>
+                        </div>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim);">
+                            <strong>Recomendación:</strong> Realizar análisis de suelo para confirmar antes de fertilizar.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Economía -->
+            <section id="economia" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">💰 Economía de la Finca</h2>
+                <div class="economy-dashboard" id="economy-dashboard"></div>
+                <button class="btn-primary" onclick="calculateProfitability()">
+                    Calcular Rentabilidad por Actividad
+                </button>
+            </section>
+
+            <!-- Decisiones -->
+            <section id="decisiones" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🤔 Decisiones</h2>
+                <div class="decision-matrix" id="decision-matrix"></div>
+            </section>
+
+            <!-- Simulador -->
+            <section id="simulador" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🔮 ¿Y si...?</h2>
+                <p style="color: var(--text-dim); margin-bottom: 1rem;">
+                    Simula escenarios antes de invertir tiempo o dinero.
+                </p>
+                <div id="scenarios-list"></div>
+            </section>
+
+            <!-- Calendario -->
+            <section id="calendario" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">📅 Calendario Productivo</h2>
+                <div id="calendar-content"></div>
+            </section>
+
+            <!-- Futuro Finquero -->
+            <section id="futuro" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">🎓 Futuro Finquero</h2>
+                <div id="quests-list"></div>
+            </section>
+
+            <!-- Memoria -->
+            <section id="memoria" class="section">
+                <h2 style="margin-bottom: 1rem; color: var(--gold);">📚 Memoria de la Finca</h2>
+                <div id="memory-content"></div>
+            </section>
+        </main>
+
+        <!-- Navegación -->
+        <nav class="nav-grid">
+            <button class="nav-item active" onclick="navigateTo('dashboard')">
+                <span class="nav-item-icon">🏠</span>
+                <span>Inicio</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('mapa')">
+                <span class="nav-item-icon">🗺️</span>
+                <span>Mapa</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('cultivos')">
+                <span class="nav-item-icon">🌾</span>
+                <span>Cultivos</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('animales')">
+                <span class="nav-item-icon">🐄</span>
+                <span>Animales</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('economia')">
+                <span class="nav-item-icon">💰</span>
+                <span>Economía</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('decisiones')">
+                <span class="nav-item-icon">🤔</span>
+                <span>Decidir</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('fotos')">
+                <span class="nav-item-icon">📷</span>
+                <span>Fotos</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('simulador')">
+                <span class="nav-item-icon">🔮</span>
+                <span>¿Y si...?</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+          </html>
